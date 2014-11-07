@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <br>
+      <table class="table table-bordered">
+        <th>{{ t('discussion','Configuration Name') }}</th>
+        <th>{{ t('discussion','Configuration Value') }}</th>
+        {% for configuration in configurations %}
+        <tr>
+          <td class='hidden'>{{ configuration.name_key }}</td>
+          <td class='name'>{{ configuration.name }}</td>
+          <td class='value'>{{ configuration.value }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      <br/>
+  </div>
+</div>

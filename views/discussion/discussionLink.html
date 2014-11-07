@@ -1,0 +1,62 @@
+<div class="title-bar">
+  <div class="container">
+    <h1> {{ title }}</h1>
+  </div>
+</div>
+<div class="container">
+  {% if links is empty %}
+    <div style="background-color:#f5f5f5; margin:25px 0px;">
+      <div class="row">
+        <div class="span12">
+          <div style="padding:25px 25px;text-align: center">    
+            <h6> 
+              {{t('discussion', 'There are no links') }}.<br>
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  {% else %}
+    <table class="container table table-bordered table-hover proposal-table">
+      <thead>
+        <tr>
+          <th>{{ t('discussion', 'S No.') }}</th>
+          <th class='span2'>{{ t('discussion', "Link's author") }}</th>        
+          <th>{{ t('discussion', 'Summary')}}</th>
+          <th>{{ t('discussion', 'Description')}}</th>
+          <th>{{ t('discussion', 'Show/hide')}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set i = 0 %}
+        {% for link in links %}
+          <tr>
+            {% set i = i+1 %}
+            <td>{{ i }}</td>
+            <td class='span2'> {{ link.author_name }}</td>
+            <td>{{ link.summary }}</td>
+            <td>{{ link.description }}</td>
+            {% if link.status == 'active' %}
+              <td>
+                <span link-id='{{link.id}}' class="opinionStatus">{{ t('discussion', 'Hide') }}</span>
+                <span style="display:none;" class="loading-image"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading..." /></span> 
+              </td>  
+            {% else %}
+              <td>
+                <span link-id='{{link.id}}' class="opinionStatus">{{ t('discussion', 'Show') }}</span>
+                <span style="display:none;" class="loading-image"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading..." /></span> 
+               </td>
+             {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  
+  <script src="{{constant('THEME_URL')}}js/link.js"></script>
+  <script type="text/javascript">
+    var page = {
+      url: "{{constant('BASE_URL')}}discussion/proposals/hygeine/links/update",
+    };
+  </script>

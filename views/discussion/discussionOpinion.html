@@ -1,0 +1,59 @@
+<div class="title-bar">
+  <div class="container">
+    <h1> {{ title }} </h1>
+  </div>
+</div>
+<div class="container">
+  {% if opinions is empty %}
+    <div style="background-color:#f5f5f5; margin:25px 0px;">
+      <div class="row">
+        <div class="span12">
+          <div style="padding:25px 25px;text-align: center">    
+            <h6> 
+              {{t('discussion', 'There are no opinion') }}.<br>
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>    
+  {% else %}
+    <table class="container table table-bordered proposal-table">
+      <thead>
+        <tr>
+          <th>{{ t('discussion', 'S No.') }}</th>
+          <th class='span2'>{{ t('discussion', "Opinion's author") }}</th>
+          <th>{{ t('discussion', 'Description')}}</th>
+          <th>{{ t('discussion', 'Show/hide')}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set i = 0 %}
+        {% for opinion in opinions %}
+          <tr>
+            {% set i = i+1 %}
+            <td>{{ i }}</td>
+            <td class='span2'> {{ opinion.author_name }}</td>
+            <td>{{ opinion.description }}</td>
+            {% if opinion.status == 'active' %}
+              <td>
+                <span style="cursor: pointer" opinion-id='{{opinion.id}}' discussion-id="{{opinion.discussion_id}}" tag-name="{{opinion.tag_name}}" class="opinionStatus">{{t('discussion', 'Hide')}}</span>
+                <span style="display:none;" class="loading-image"><img src="{{constant('BASE_URL')}}images/loader.gif" alt="loading..." /></span> 
+              </td>
+            {% else %}
+              <td>
+                <span style="cursor: pointer" opinion-id='{{opinion.id}}' discussion-id="{{opinion.discussion_id}}" tag-name="{{opinion.tag_name}}" class="opinionStatus">{{t('discussion', 'Show')}}</span>
+                <span style="display:none;" class="loading-image"><img src="{{constant('BASE_URL')}}images/loader.gif" alt="loading..." /></span> 
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  
+  <script src="{{constant('THEME_URL')}}js/opinion.js"></script>
+  <script type="text/javascript">
+    var page = {
+      url: "{{constant('BASE_URL')}}discussion/proposals/hygeine/opinion/update",
+    };
+  </script>

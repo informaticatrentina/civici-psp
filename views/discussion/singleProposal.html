@@ -1,0 +1,73 @@
+
+<div class="container-narrow">
+  <div class="masthead">
+    <img src="{{constant('THEME_URL')}}images/civici.png">
+      <h4 class="muted">discussione pubblica sulle riforme costituzionali</h4>
+  </div>
+
+  <div class="proposal-title">
+    <h4>{{summary}}</h4>
+  </div>
+
+  <div class="text">
+    <h2>{{proposal.0.title}}</h2>
+    <div class="author">
+      <img src="{{constant('PROFILE_IMAGE_URL')~proposal.0.author.slug}}/{{constant('PROFILE_IMAGE_SIZE')}}" class="avatar">
+        <div class="name">da  {{proposal.0.author.name}}</div>
+    </div>
+    <div class="row-fluid">
+      <div class="span2 immagine">
+        <svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="180px" height="113px" viewBox="-9.25 6.98 209 196" enable-background="new -18.25 -18.75 200 180" xml:space="preserve">
+          <g>
+            {% for key,understand in understanding %}
+            <polygon class="sl" index="{{ key }}" understanding="{{ understand.a }}" comprehension="{{ understand.c }}" fill=" {{ heatmap[tags[key]] }}" points="{{ understand.points }}" msg="{{ understand.msg }}"/>
+            {% endfor %}
+          </g>
+        </svg> 
+      </div>
+      <div class="span10 intro">{{proposal.0.content.summary}}</div>
+      <div class="row-fluid">
+        <div class="span12 main-desc">
+          {{proposal.0.content.description}}
+        </div>
+      </div>
+    </div>
+  </div> <!-- END of Text -->
+
+  <div class="opinion">
+    <h4 class="muted">opinioni su questa proposta</h4>
+  </div>
+  <div class="comments">
+    {% for key, value in data.opinion%}
+    <div class="author comment">
+      <svg style="float: left" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="53px" height="43px"  viewBox="-9.25 6.98 209 196" enable-background="new -18.25 -18.75 200 180" xml:space="preserve">
+        <g>
+          {% for key,understand in understanding %}
+          {% if value.tags.0.weight == key%}
+          <polygon class="sl" index="{{ key }}" understanding="{{ understand.a }}" comprehension="{{ understand.c }}" fill=" {{ understand.fill }}" points="{{ understand.points }}" msg="{{ understand.msg }}"/>
+          {% else %}
+          <polygon class="sl" index="{{ key }}" understanding="{{ understand.a }}" comprehension="{{ understand.c }}" fill="#F4f2f3" points="{{ understand.points }}" msg="{{ understand.msg }}"/>
+          {%endif%}
+          {% endfor %}
+        </g>
+      </svg> 
+      <img src="{{constant('PROFILE_IMAGE_URL')~value.author.slug}}/{{constant('PROFILE_IMAGE_SIZE')}}" class="avatar person"/>
+      <div class="name">{{value.author.name}}</div>
+      <p class="{{value.class}}">{{value.content.description}}</p>
+    </div>
+    {% endfor %}
+  </div> <!-- END of Comments -->
+
+  <div class="link">
+    <h3>Link allegati</h3>
+    <ul>
+      {% for key, value in data.link%}
+      <li><a href="{{value.content.summary}}" target="_blank">{{value.content.summary}}</a><br>{{value.content.description}}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<script>
+  var imageUrl = "{{constant('PROFILE_IMAGE_URL')}}";
+  var imageSize = "{{constant('PROFILE_IMAGE_SIZE')}}";
+</script>

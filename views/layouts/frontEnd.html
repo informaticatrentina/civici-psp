@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{constant('TITLE')}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="{{constant('THEME_URL')}}css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{constant('THEME_URL')}}css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'>
+    <link href="{{constant('THEME_URL')}}css/custom-homepage.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{{constant('THEME_URL')}}css/jquery.pageslide.css">
+    <link rel="stylesheet" href="{{constant('THEME_URL')}}css/responsiveslides.css">
+    <link rel="stylesheet" href="{{constant('THEME_URL')}}css/jquery.reject.css">
+    <link rel="shortcut icon" href="{{constant('THEME_URL')}}assets/ico/favicon.ico">
+    <script src="{{constant('THEME_URL')}}js/jquery.js"></script>
+    <script src="{{constant('THEME_URL')}}js/common.js"></script>
+    <script type="text/javascript">
+      var page = {
+        base_url: "{{constant('BASE_URL')}}"
+      };
+    </script>
+  </head>
+  <body>
+    {% include '/views/template/header.html' %}
+
+    {{  content }}
+
+    {% include '/views/template/footer.html' %}
+    <script src="{{constant('THEME_URL')}}js/bootstrap.js"></script>
+<!--    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>-->
+    <script src="{{constant('THEME_URL')}}js/jquery.pageslide.min.js"></script>
+    <script src="{{constant('THEME_URL')}}js/responsiveslides.js"></script>
+    <script type="text/javascript" src="{{constant('THEME_URL')}}js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="{{constant('THEME_URL')}}js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="{{constant('THEME_URL')}}js/jquery.vaccordion.js"></script>
+    <script type="text/javascript" src="{{constant('THEME_URL')}}js/jquery.reject.js"></script>
+    <script type="text/javascript" src="{{constant('THEME_URL')}}js/jreject.config.js"></script>
+    <script>
+      $(function() {
+        $("#myslider").responsiveSlides({
+          auto: false,
+          pager: true,
+          speed: 300,
+          manualControls: '#myslider-pager',
+        });
+      });
+    </script>
+  </body>
+</html>

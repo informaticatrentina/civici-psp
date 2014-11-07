@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="row-fluid">
+    <div class="span12" style="position:relative;">
+      <div class="border-line">
+        <h1 class="site-title">
+          <a class="civici-logo" rel="home" title="CIVICI" href="{{constant('BASE_URL')}}">In movimento - Civici</a>
+        </h1>
+        <div class="psp-logo">
+          <a href="http://www.provincia.trento.it"><img src="{{constant('THEME_URL')}}images/pat.png" alt="psp"></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row-fluid">
+      <div class="span12">
+          <div class="banner">
+              <img src="{{constant('THEME_URL')}}images/hd.png" alt="banner" />
+          </div>
+      </div>
+  </div>
+
+  <div class="row-fluid">
+      <div class="span12">
+      <div class="introtxt">
+<h3>Benvenuti nella consultazione sulle Linee guida<br />per il Programma di sviluppo provinciale per la XV legislatura.</h3>
+
+<p><strong>Le linee guida individuano le principali strategie e gli obiettivi generali di sviluppo per la legislatura</strong> sulla base delle caratteristiche strutturali del contesto economico e sociale della provincia. Le linee guida delineano i contenuti generali del nuovo Programma di sviluppo provinciale che saranno articolati e declinati nel documento programmatico finale.</p>
+
+<p><strong>La consultazione sulle linee guida si è conclusa il 15 settembre 2014.</strong> In questo periodo sono state raccolte osservazioni e proposte per l'elaborazione della proposta di Programma di sviluppo provinciale che verrà trasmessa al Consiglio provinciale e al Consiglio delle autonomie locali per arrivare quindi all'approvazione.</p>
+
+<p>CIVICI resta comunque a disposizione per chi vuole leggere le proposte e i commenti già pubblicati. Grazie per aver partecipato.</p>
+      </div>
+	</div>
+  </div>
+
+  <div class="row-fluid">
+      <div class="span6" style="margin-bottom: 12px;">
+      </div>
+      <div class="span6" style="text-align: right">
+          <a href="{{constant('THEME_URL')}}images/psp-pat.pdf" target="_blank" style="color:#000; text-decoration:none; font-family:'PT sans', helvetica; font-size:13px;">
+              <div style="width:200px; height:34px; border-radius:4px;
+              line-height:34px; background-color:#F5F5F5; text-align:center; float:right">&gt; Scarica le linee guida</div>
+          </a>
+      </div>
+  </div>
+
+      {% if submission !=1 %}<br/>{{text}}{%endif%}
+
+
+  {% for discussion in discussions %}
+  <div class="row-fluid">
+    {% for discusion in discussion%}
+      {% set styleColor = '' %}
+      {% for key,colorv in color %}
+        {%if key in discusion.slug %}
+          {% set styleColor = colorv %}
+        {%endif%}
+      {% endfor %}
+      <div class="span6 themes {{styleColor}} by-{{discussion.author_id}}">
+      <a href="{{constant('BASE_URL')}}discussion/proposals/{{discusion.slug}}" class="linktotheme">
+        <div class="title">{{ discusion.title }}</div>
+        <p class="description">{{ discusion.summary }}</p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+</div>

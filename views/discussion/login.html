@@ -1,0 +1,34 @@
+<div class="container"  id="application">
+  <form class="form-signin" method='POST' style="margin-top: 30px;">
+    <h2 class="form-signin-heading">{{ t('discussion', 'Insert username and password') }}</h2>
+    {% set class = 'alert-error' %}
+    {% if message.msg is not empty %}
+    {% if message.success is not empty %}
+    {% set class = 'alert-success' %}
+    {% endif %}      
+    {% endif %}
+    <div class="{{class}}" id="error">
+      {% if message.msg is not empty %}
+      {{ message.msg }}
+      {% endif %}  
+    </div>
+    <input type="text" class="input-block-level" id="email" name="email"  placeholder="{{ t('discussion','Email address') }}">
+    <input type="password" class="input-block-level" id='password' name="password"  placeholder="{{ t('discussion','Password') }}">
+    <label class="checkbox">
+      <input type="checkbox" value="remember-me"> {{ t('discussion', 'Remember me') }}
+    </label>
+    <button class="btn btn-primary" type="submit" id="submit">{{ t('discussion', 'Sign in') }}</button>
+  </form>
+</div>
+{% if message.success is not empty %}  
+{% if user.admin is not empty %}
+<script type="text/javascript">
+  var contestUrl = "{{user.url}}";
+  parent.location.replace(contestUrl);
+</script>
+{% endif %}
+<script type="text/javascript">
+  var backPageUrl = "{{back_url}}";
+  parent.location.replace(backPageUrl);
+</script>
+{% endif %}  

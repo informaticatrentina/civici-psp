@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="container darkheader">
+    <div class="row">
+      <div class="span4">
+        <a class="link admin-discussion-link" href="{{constant('BASE_URL')}}admin/discussion/add"> {{ t('discussion', 'Create Discussion')}}</a>
+<!--        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a class="admin-discussion-link" href="{{constant('BASE_URL')}}admin/user/export"> {{ t('discussion', 'Export All Contributors')}}</a>
+    -->  </div>
+    </div>
+  </div>
+  <br>
+    <table class="table table-bordered">
+      <th>{{ t('discussion','Discussion Title') }}</th>
+      <th>{{ t('discussion','Discussion Summary') }}</th>
+      <th>{{ t('discussion','Discussion Author') }}</th>
+      <th>{{ t('discussion', 'Sorting Order') }}</th>
+      <th>{{ t('discussion','Edit') }}</th>      
+      <th>{{ t('discussion','View Proposals') }}</th>
+      {% for info in discussionInfo %}
+      <tr>
+        <td>{{ info.discussionTitle }}</td>
+        <td>{{ info.discussionSummary }}</td>
+        <td>{{ info.discussionAuthor }}</td>
+        <td><input type="text" size="2" maxlength="2" discussion-slug="{{info.discussionSlug}}" value="{{info.discussionOrder}}" class="sort-order span1" /></td>
+        <td><a href="{{constant('BASE_URL')}}admin/discussion/edit/{{ info.discussionSlug }}">{{ t('discussion','Edit')}}</a></td>
+        <td><a href="{{constant('BASE_URL')}}discussion/proposal/list/{{ info.discussionSlug }}">{{ t('discussion','View Proposals')}}</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <br/>
+  </div>
+<script>
+  var baseUrl = "{{constant('BASE_URL')}}";
+</script>
+<script src="{{constant('THEME_URL')}}js/discussionList.js"></script>

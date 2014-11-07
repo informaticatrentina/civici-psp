@@ -1,0 +1,71 @@
+<div class="title-bar">
+  <div class="container">
+    <h1> {{discussionTitle}} </h1>
+  </div>
+</div> 
+<div class="container">
+  {% if proposals is empty %}
+  <div class="container">
+    <div style="background-color:#f5f5f5; margin:25px 0px;">
+      <div class="row">
+        <div class="span12">
+          <div style="padding:25px 25px;text-align: center">
+            <h6>{{t('discussion','There are no proposal in this discussion')}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+  {% else %}
+  <table class="table table-bordered">
+    <th>{{ t('discussion','Title') }}</th>
+    <th>{{ t('discussion','Description') }}</th>
+    <th>{{ t('discussion','Author') }}</th>
+    <th>{{ t('discussion','Creation Date') }}</th>
+    <th>{{ t('discussion','Number of Opinions') }}</th>
+    <th>{{ t('discussion','Triangle count') }}</th>
+    <th>{{ t('discussion','View opinions') }}</th>      
+    <th>{{ t('discussion','View links') }}</th>
+    <th>{{ t('discussion','Status') }}</th>
+    {% for proposal in proposals %}
+    <tr>
+      <td><a class="proposalLinks" href="{{constant('BASE_URL')}}discussion/{{slug}}/{{proposal.id}}">{{ proposal.title }}</a></td>
+      <td>{{ proposal.description }}</td>
+      <td>{{ proposal.author }}</td>
+      <td>{{ proposal.creation_date }}</td>
+      <td>{{ proposal.totalOpinion }}</td>
+      <td>
+        {% if proposal.weightmap is iterable %} 
+        {% for key,value in proposal.weightmap %}
+          {{key}}=>{{value}}
+            {% endfor %}
+         {% else %}
+            {{proposal.weightmap}}
+         {%endif%}
+      </td>
+      <td><a class="proposalLinks" href="{{constant('BASE_URL')}}discussion/proposals/{{slug}}/opinion?id={{proposal.id}}">{{ t('discussion','View opinions')}}</a></td>
+      <td><a class="proposalLinks" href="{{constant('BASE_URL')}}discussion/proposals/{{slug}}/links?id={{proposal.id}}">{{ t('discussion','View links')}}</a></td>
+      {% if proposal.status == 'active' %}
+      <td>
+        <span proposal-id='{{proposal.id}}' class="proposalStatus">{{t('discussion', 'Hide')}} </span>
+        <span style="display:none;" class="loading-image"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading..." /></span> 
+      </td>
+      {% else %}
+      <td>
+        <span proposal-id='{{proposal.id}}'  class="proposalStatus">{{t('discussion', 'Show')}}</span>
+        <span style="display:none;" class="loading-image"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading..." /></span> 
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  <br/>
+
+</div>
+<script src="{{constant('THEME_URL')}}js/proposalStatus.js"></script>
+<script type="text/javascript">
+  var page = {
+    proposalStatusUrl: "{{constant('BASE_URL')}}discussion/proposal/status",
+  };
+</script>

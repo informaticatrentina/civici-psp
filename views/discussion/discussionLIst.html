@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <br>
+    <table class="table table-bordered">
+      <th>{{ t('discussion','Discussion Title') }}</th>
+      <th>{{ t('discussion','Discussion Summary') }}</th>
+      <th>{{ t('discussion','Discussion Author') }}</th>
+      <th>{{ t('discussion','Submit Proposal') }}</th>
+      {% for info in discussionInfo %}
+      <tr>
+        <td><a href="{{constant('BASE_URL')}}discussion/proposals/{{ info.discussionSlug }}">{{ info.discussionTitle }}</a></td>
+        <td>{{ info.discussionSummary }}</td>
+        <td>{{ info.discussionAuthor }}</td>
+        <td><a href="{{constant('BASE_URL')}}discussion/proposal/submit/{{ info.discussionSlug }}">{{ t('discussion','Submit')}}</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <br/>
+  </div>
+</div>

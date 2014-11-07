@@ -1,0 +1,130 @@
+<link href="{{constant('THEME_URL')}}css/theme.bootstrap.css" rel="stylesheet">
+<div class="title-bar">
+  <div class="container">
+    <div class="pull-left">
+      <h1>
+        {{discussionTitle}} 
+      </h1>
+    </div>
+    <div class="pull-right" style="margin-top: 10px; margin-right:20px;margin-bottom: 10px;">
+      <form method="post" action="{{constant('BASE_URL')}}admin/export/{{discussionId}}">
+        <button class=" btn-info excel" >Export To Excel</button>
+      </form>    </div>
+  </div>
+</div>
+<div class="container">
+  <table class="table table-bordered zebra-striped" id="sortTable">
+    <thead>
+      <tr class="tablesorter-headerRow">
+        <th>{{ t('discussion','Title') }}</th>
+        <th>{{ t('discussion','Description') }}</th>
+        <th>{{ t('discussion','Author') }}</th>
+        <th>{{ t('discussion','Creation Date') }}</th>
+        <th>{{ t('discussion','Number of Opinions') }}</th>
+        <th>{{ t('discussion','Number of Links') }}</th>
+        <th class="sorter-false">{{ t('discussion','Triangle count') }}</th>
+        <th class="sorter-false">{{ t('discussion','Edit') }}</th>
+        <th class="sorter-false">{{ t('discussion','View opinions') }}</th>      
+        <th class="sorter-false">{{ t('discussion','View links') }}</th>
+        <th class="sorter-false">{{ t('discussion','Status') }}</th>
+      </tr>
+    </thead>
+    {% for proposal in allProposals %}
+    <tr>
+      <td><a class="proposalLinks proposal-title" href="{{constant('BASE_URL')}}discussion/{{slug}}/{{proposal.id}}">{{ proposal.title }}</a></td>
+      <td class="proposal-description">{{ proposal.content.description }}</td>
+      <td>{{ proposal.author.name }}</td>
+      <td>{{ proposal.creation_date }}</td>
+      {% if proposal.totalOpinion != '' %}
+      <td>{{ proposal.totalOpinion }}</td>
+      {%else %}
+      <td>0</td>
+      {%endif%}
+      {% if proposal.totalLinks != '' %}
+      <td>{{ proposal.totalLinks }}</td>
+      {%else %}
+      <td>0</td>
+      {%endif%}
+      <td>
+        {% if proposal.weightmap is iterable %} 
+        <svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="180px" height="113px" viewBox="-9.25 6.98 209 196" enable-background="new -18.25 -18.75 200 180" xml:space="preserve">
+        <g>
+        {% for key,value in proposal.weightmap %}
+        <polygon class="sl" index="{{key}}"  fill="{{understanding[key].fill}}" points="{{understanding[key].points }}"  msg="{{ understand.msg }}"/>
+        <text  x="{{understanding[key].x}}" y="{{understanding[key].y}}" fill="black">{{value}}</text>
+        {% endfor %}
+        </g>
+        </svg> 
+        {% else %}
+        {{proposal.weightmap}}
+        {%endif%}
+      </td>
+      <td class="edit-proposal" proposal-id="{{proposal.id}}" proposal-summary="{{proposal.content.summary}}">
+        <a a href="#formModal" data-toggle="modal">{{t('discussion','Edit')}}</a>
+      </td>
+      <td><a class="proposalLinks" href="{{constant('BASE_URL')}}discussion/proposals/{{slug}}/opinion?id={{proposal.id}}">{{ t('discussion','View opinions')}}</a></td>
+      <td><a class="proposalLinks" href="{{constant('BASE_URL')}}discussion/proposals/{{slug}}/links?id={{proposal.id}}">{{ t('discussion','View links')}}</a></td>
+      {% if proposal.status == 'active' %}
+        <td>
+          <span proposal-id='{{proposal.id}}' class="proposalStatus">{{t('discussion', 'Hide')}} </span>
+          <span style="display:none;" class="loading-image"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading..." /></span> 
+        </td>
+        {% else %}
+        <td>
+          <span proposal-id='{{proposal.id}}'  class="proposalStatus">{{t('discussion', 'Show')}}</span>
+          <span style="display:none;" class="loading-image"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading..." /></span> 
+        </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+  <br/>
+</div>
+<div id="formModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">{{discussionTitle}}</h3>
+      </div>
+      <div class="modal-body" style="padding:40px; max-height: 300px;">
+        <form class="form-horizontal" id ="update-proposal-form" method="post" role="form" action="{{constant('BASE_URL')}}discussion/proposal/edit/{{ slug }}" id="submit-proposal-form">
+          <div class="form-group">
+            <div class="hidden alert-error" id="proposal-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="title">{{ t('discussion', 'Title') }}</label>
+            <input maxlength="{{title_char}}" class="form-control" id="title" name="title" value="{{title}}" type="text" />
+            <div class="words">{{title_char}}</div>
+          </div>
+          <div class="form-group">
+            <label for="Introduction">{{ t('discussion', 'Introduction') }}</label>
+            <textarea maxlength="{{intro_char}}" rows="3" class="form-control"  id="proposal-summary" name="summary"></textarea>
+             <div class="words">{{intro_char}}</div>
+          </div>
+          <div class="form-group">
+            <label for="Proposal">{{ t('discussion', 'Proposal') }}</label>
+            <textarea rows="5" class="form-control" id="proposal-description" name="description"></textarea>
+          </div>
+          <input type="hidden" name="proposal_id" value="" id="proposal-id">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ t('discussion', 'Cancel')}}</button>
+        <button id="updateProposal"  class="btn btn-primary">{{ t('discussion', 'Update Proposal')}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{constant('THEME_URL')}}js/jquery.tablesorter.min.js"></script>
+<script src="{{constant('THEME_URL')}}js/jquery.tablesorter.widgets.js"></script>
+<script src="{{constant('THEME_URL')}}js/reports.js"></script>
+<script src="{{constant('THEME_URL')}}js/proposalStatus.js"></script>
+<script type="text/javascript">
+  var page = {
+    proposalStatusUrl: "{{constant('BASE_URL')}}discussion/proposal/status",
+  };
+  var title = "{{constant('TITLE')}}";
+  var tcharLimit = "{{title_char}}";
+  var icharLimit = "{{intro_char}}";
+</script>

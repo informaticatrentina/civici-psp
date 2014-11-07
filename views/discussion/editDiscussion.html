@@ -1,0 +1,60 @@
+<div class="container darkheader">
+  <div class="row">
+    <div class="span2"><a class="link" href="{{constant('BASE_URL')}}admin/discussion/add">{{ t('discussion', 'Create Discussion') }}</a>
+    </div>
+    <div class="span3"><a class="link" href="{{constant('BASE_URL')}}admin/discussion/list">{{ t('discussion', 'Manage Discussion') }}</a>
+    </div>
+  </div>
+</div>
+<div class="container maincontent">
+  <form class="form-create-discussion" action="" method="post"  enctype = "multipart/form-data">
+    <legend>{{ t('discussion', 'Edit Discussion') }}</legend>
+    {% if message.msg is not empty %}
+    {% set class = 'alert-error' %}
+    {% set id = 'error' %}
+    {% if message.success is not empty %}
+    {% set class = 'alert-success' %}
+    {% endif %}
+    <span class="{{class}}">
+      {{ message.msg }}
+    </span>
+    {% endif %}
+    <div  class="alert-error" id="error"></div>
+    <label>{{ t('discussion','Discussion Title')}}</label>
+    <input type="text" id="discussionTitle" class="input-block-level input-xxlarge" name="discussionTitle"  value="{{discussion.title}}">
+    <label>{{ t('discussion','Discussion Summary')}}</label>
+    <textarea  class="input-block-level textarea" id="discussionSummary" name="discussionSummary">{{ discussion.summary }}</textarea>
+    <label>{{ t('discussion', 'Additional Description (Header Text)') }}</label>
+    <textarea  class="input-block-level textarea" name="additional_description">{{ discussion.additionalDescription }}</textarea>
+    <label> {{ t('discussion','Discussion Topics (Please enter "," saperated )') }} </label>
+    <input type="text" id="discussionTopics" class="input-block-level input-xxlarge" name="discussionTopics"  value="{{discussion.topics}}">
+    <label > {{ t('discussion','Status') }} </label>
+    <label class="radio">
+      <input type="radio" name="status" id="optionsRadios1" value="active" {% if discussion.status ==  1 %}
+             {{ 'checked' }} {% endif %}>
+             {{ t('discussion', 'Active') }} 
+    </label>
+    <label class="radio">
+      <input type="radio" name="status" id="optionsRadios1" value="incative"  {% if discussion.status ==  0 %}
+             {{ 'checked' }} {% endif %} >
+             {{ t('discussion', 'InActive') }}
+    </label>
+    <label > {{ t('discussion','Propoasl Status') }}</label>
+    <label class="radio">
+      <input type="radio" name="proposal_status" id="optionsRadios1" value="open" {% if discussion.proposal_status ==  1 %}
+             {{ 'checked' }} {% endif %}>
+             {{ t('discussion', 'Open') }}
+    </label>    <label class="radio">
+      <input type="radio" name="proposal_status" id="optionsRadios1" value="closed"  {% if discussion.proposal_status ==  0 %}
+             {{ 'checked' }} {% endif %}>
+             {{ t('discussion', 'Closed') }}
+    </label>
+    <input type="hidden" name="discussionSlug" value="{{ discussion.slug }}"></button>
+    <button id="create" class="btn btn-large btn-primary" type="submit" name='contestDetail'>{{ t('discussion', 'Update Discussion') }}</button>
+  </form>
+  <hr>
+</div>  
+<script>
+  var title = "{{constant('TITLE')}}";
+</script>
+<script src="{{constant('THEME_URL')}}js/createDiscussion.js"></script>

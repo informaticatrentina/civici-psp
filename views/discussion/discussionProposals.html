@@ -1,0 +1,368 @@
+<div class="container" style="padding : 0px"> 
+  <div class="row">
+    <div class="col-sm-12 col-lg-12" style="position:relative;">
+      <div class="border-line">
+        <h1 class="site-title" style="margin:10px 0;">
+          <a class="civici-logo" rel="home" title="CIVICI" href="{{constant('BASE_URL')}}">In Movimento - Civici</a>
+        </h1>
+        <div class="psp-logo">
+          <a href="http://www.provincia.trento.it"><img src="{{constant('THEME_URL')}}images/pat.png" alt="psp"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="title-bar">
+  <div class="container">
+    <div class="pull-left">
+      <h1>
+        {{ title }}
+      </h1>
+      <h5 class="subtitle">{{ summary }}</h5>
+      <div>
+        {{ additionalDescription }}
+      </div>
+    </div>
+    {% if (submission_status == 1) %}
+      {% if App.session is not empty %}
+        {% if (App.session.user.canSubmitProposal == 1) %}
+          <div class="pull-right" style="margin-top: 10px; margin-right:20px;margin-bottom: 10px;">
+            <a href="#formModal" data-toggle="modal" class="btn btn-default">{{t('discussion', 'Add a new Proposal ')}}</a>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+<div class="container">
+  <div class="allproposals row {{ccolor}}">
+    {% set count = 0 %}
+    {% for proposal in proposals.data %}
+      <div class="post-box col-lg-4 col-md-4 col-sm-4 col-xs-12 singleProposal">
+        <article class="proposal by-{{proposal.author.slug}} pid-{{proposal.id}}">
+          <input class="auID" value="by-{{proposal.author.slug}}" type="hidden">
+          <a class="openModal">
+            <h3 class="proposalheader">{{ proposal.title }}</h3>
+            <div class="byline"><img src="{{constant('PROFILE_IMAGE_URL')~proposal.author.slug}}/{{constant('PROFILE_IMAGE_SIZE')}}">
+              <div class="author">{{t('discussion','by')}} {{ proposal.author.name }}</div>
+            </div>
+            <summary>
+              {{ proposal.content.summary }}
+            </summary>
+          </a>
+          <input class="summary" value="{{ proposal.content.description|escape }}" type="hidden"/>
+          <input class="propId" value="{{ proposal.id }}" type="hidden"/>
+          <input class="authName" value="{{ proposal.author.name }}" type="hidden"/>
+          <input class="author-slug" value="{{proposal.author.slug}}" type="hidden"/>
+          <input value="{{constant('PROFILE_URL')}}" class="profileUrl" type="hidden"/>
+          <input value="{{proposal.target_language}}" class="targetLanguage" type="hidden"/>
+          <footer>
+            {% set adminUser = false %}
+            {% set adminUser = isAdminUser() %} 
+            <span class="opinions" style="color: #fff"><a href="#myModal{{ count }}" role="button" data-toggle="modal"><i class="icon-comment"></i></a>
+              <count>{{ proposal.count }}</count>
+            </span>
+            <span class="documents"><a role="button" data-toggle="modal"><i class="icon-external-link-sign"></i></a>
+              <count>{{ proposal.linkcount }}</count>
+            </span>
+            <span class="documeents">
+              <span class="pop" style="display: none">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="180px" viewBox="-18.25 -18.75 200 180" enable-background="new -18.25 -18.75 200 180" xml:space="preserve">
+                  <text class="triangle-text" transform="matrix(1 0 0 1 63 -5.25)" font-family="'HelveticaNeue'" font-size="11">{{ t('discussion', 'Understand') }}</text>
+                  <text class="triangle-text" transform="matrix(1 0 0 1 51 156.75)" font-family="'HelveticaNeue'" font-size="11">{{ t('discussion', 'Don’t Understand') }}</text>
+                  <text class="triangle-text" transform="matrix(1 0 0 1 -13.4998 77)" font-family="'HelveticaNeue'" font-size="11">{{t('discussion', 'Disagree')}}</text>
+                  <text class="triangle-text" transform="matrix(1 0 0 1 126 77)" font-family="'HelveticaNeue'" font-size="11">{{ t('discussion', 'Agree') }}</text>
+                  <g>
+                    {% if proposal.heatMap < 9 %}
+                      {% for key,understand in understanding %}
+                        <polygon class="sl" index="{{ key }}" understanding="{{ understand.a }}" comprehension="{{ understand.c }}" fill="#F4f2f3" points="{{ understand.points }}" msg="{{ understand.msg }}"></polygon>
+                      {% endfor %}
+                    {% else %}
+                      {% for key,understand in understanding %}
+                        <polygon class="sl" index="{{ key }}" understanding="{{ understand.a }}" comprehension="{{ understand.c }}" fill=" {{ heatMap[proposal.heatmap[key]] }}" points="{{ understand.points }}" msg="{{ understand.msg }}"></polygon>
+                      {% endfor %}
+                    {% endif %}
+                  </g>
+                </svg> 
+              </span>
+              <a href="#" class="opinionmap" rel="popover" data-original-title="" title=""><img src="{{constant('THEME_URL')}}images/triangleIcn.png" height="12px" width="14px"></a> 
+            </span>
+          </footer>
+        </article>
+        <div id="modalBox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="row"></div>                
+              </div>
+              <div class="modal-body">
+                <ul class="nav nav-tabs modal-menu-bar">
+                  <li class="active"><a href="#proposal" data-toggle="tab">{{t('discussion', 'Proposal')}}</a></li>
+                  <li><a href="#opinion" data-toggle="tab">{{t('discussion', 'Opinion')}}</a></li>
+                  <li><a href="#links" data-toggle="tab">{{t('discussion', 'Links')}}</a></li>
+                </ul>
+                <div class="tab-content" style="margin-top:20px;">
+                  <div class="tab-pane active" id="proposal"></div>                  
+                  <div id="opinion" class="tab-pane">
+                    {% if (op_st == 1) %}
+                      {% if App.session is not empty %}                      
+                        <div class="row">
+                          <div align="center" class="col-lg-5 col-md-5 col-sm-5 col-xs-12"> 
+                            <h4 align="left">{{t('discussion', 'Your Position')}}</h4>
+                            <hr>
+                            <svg class="col-md-12 col-xs-12 col-sm-12 pull-left" style="padding: 0;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="180px" viewBox="-18.25 -18.75 200 180" enable-background="new -18.25 -18.75 200 180" xml:space="preserve">
+                              {% for key,understand in understanding %}
+                                <a xlink:href="#" class="tmodal-launcher"><polygon class="sl" index="{{ key }}" understanding="{{ understand.a }}" comprehension="{{ understand.c }}" fill="{{ understand.fill }}" points="{{ understand.points }}" msg="{{ understand.msg }}"></polygon></a>
+                              {% endfor %}
+                              <text class="triangle-text" transform="matrix(1 0 0 1 63 -5.25)" fill="#999" font-family="'HelveticaNeue'" font-size="11">{{ t('discussion', 'Understand') }}</text>
+                              <text class="triangle-text" transform="matrix(1 0 0 1 51 156.75)" fill="#999" font-family="'HelveticaNeue'" font-size="11">{{ t('discussion', 'Don’t Understand') }}</text>
+                              <text class="triangle-text" transform="matrix(1 0 0 1 -13.4998 77)" fill="#999" font-family="'HelveticaNeue'" font-size="11">{{t('discussion', 'Disagree')}}</text>
+                              <text class="triangle-text" transform="matrix(1 0 0 1 126 77)" fill="#999" font-family="'HelveticaNeue'" font-size="11">{{ t('discussion', 'Agree') }}</text>
+                            </svg>
+                            <div class="tmodal-content">
+                              <span class="message"><p></p></span>
+                              <button class="tmodal-close btn btn-primary btn-sm">Cambia la tua posizione</button>
+                            </div>
+                          </div>
+                          <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+                            <h4>{{t('discussion', 'Your Opinion')}}</h4>
+                            <hr>
+                            <div id="opinion-msg" class="alert-success"></div>
+                            <p class="opinion-mode">{{t('discussion', 'First give us your position on the proposal.')}}</p>
+                            <form role="form"  class="opinionform" action="" method="post"  >                          
+                              <fieldset disabled="" class="opinion-textbox">
+                                <div class="form-group">
+                                  <textarea id="opiniontext" placeholder="aggiungi la tua opinione..." rows="5" name="opiniontext" class="form-control opiniontext" maxlength="{{max_char_opinion}}">
+                                  </textarea>
+                                  <div class="words">{{max_char_opinion}}</div>
+                                </div>
+                                <button  id="opinion-button"  class="post btn btn-primary" type="submit">{{ t('discussion' , 'Submit Opinion' ) }}</button>
+                                <span id="opinion-save-image" style="display:none"><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading image"></span>
+                              </fieldset>
+                              {% if proposal.submitedopinion is iterable %} 
+                                <input class="upd" name="update" value="1" type="hidden">
+                                <input name="opinionid" class="id" value="" type="hidden">
+                                <input name="understanding" class="understanding" value="" type="hidden">
+                                <input name="comprehension" class="comprehension" value="" type="hidden">
+                                <input name="index" class="index" value="" type="hidden">
+                                <input name="previndex" class="previndex" value="" type="hidden">
+                                {% for key,understand in understanding %}
+                                  {% if understand.a == proposal.submitedopinion.understanding %}
+                                    {% if understand.c == proposal.submitedopinion.comprehension%}
+                                      <input name="prevmsg" class="prevmsg" value="" type="hidden">
+                                    {%endif%}
+                                  {%endif%}
+                                {% endfor %}
+                              {% else %}
+                                <input class="upd" name="update" value="0" type="hidden">
+                                <input name="opinionid" class="id" value="" type="hidden">
+                                <input name="understanding" class="understanding" value="" type="hidden">
+                                <input name="comprehension" class="comprehension" value="" type="hidden">
+                                <input name="index" class="index" value="" type="hidden">
+                                <input name="previndex" class="previndex" value="" type="hidden">
+                                <input name="prevmsg" class="prevmsg" value="" type="hidden">
+                              {% endif %}
+                              <input name="id" id="id" value="" type="hidden">
+                            </form>
+                          </div>
+                        </div>
+                        <hr>
+                      {% else %}
+                        <button class="btn btn-primary opinion-page-login"> {{t('discussion', 'Please Login to submit an Opinion')}}</button>                      
+                        <hr>
+                      {% endif %}
+                    {% endif %}
+                    <h4>{{ t('discussion', 'Views on this proposal') }}:</h4>
+                    <form role="form">
+                      <select class="type">
+                        <option selected="">{{ t('discussion', 'View All') }}</option>
+                        <option value="agree">{{ t('discussion', 'Agree') }}</option>
+                        <option value="disagree">{{ t('discussion', 'DisAgree') }}</option>
+                        <option value="neutral">{{ t('discussion', 'Neutral') }}</option>
+                      </select>
+                    </form>
+                    <span class="loading-image">
+                      <center><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading image"></center>
+                    </span>
+                    <div class="opinionbox"></div>
+                  </div>                  
+                  <div class="tab-pane" id="links">
+                    <div class="panelcontainer" style="display:block">
+                      <div class="panelinner">                        
+                        {% if (link_st == 1) %}
+                          {% if App.session is not empty %}                            
+                            <div class="link-box">
+                              <h4>{{t('discussion', 'Submit a new link')}}</h4>
+                              <hr>
+                              <form method="POST" class="submit-link-form" role="form">
+                                <div class="submit-link-msg"></div>
+                                <div class="form-group">
+                                  <label for="link">{{t('discussion','Link')}}</label>
+                                  <input class="form-control link-url" name="link" placeholder="{{ t('discussion','Your link') }}" type="text">
+                                </div>
+                                <div class="form-group">
+                                  <label for="linkdesc">{{t('discussion','Link Description')}}</label>
+                                  <textarea class="form-control  link-description" rows="3" name="description" placeholder="{{ t('discussion' , 'Description') }}"></textarea>
+                                </div>
+                                <input class="link-action" value="link" name="action" type="hidden">
+                                <input class="proposal-id" name="id" value="{{ proposal.id }}" type="hidden">
+                                <input class="link-count" name="count" value="{{ proposal.linkcount }}" type="hidden">
+                                <button type="submit" class="btn btn-primary submit-link">{{t('discussion', 'submit your link')}}</button>
+                                <span class="loading-image">
+                                  <center><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading image"></center>
+                                </span>
+                              </form>
+                            </div>
+                            <hr>
+                          {%else%}                            
+                            <button class="btn btn-primary link-page-login">{{t('discussion', 'Please Login to submit a link')}}</button>
+                            <hr>
+                          {%endif%}
+                        {%endif%}                             
+                        <h4 style="margin-top:0px; padding-top:0px;">{{t('discussion', 'Current links')}}</h4> 
+                        <div class="current-links"></div>
+                        <span class="loading-image">
+                          <center><img src="{{constant('THEME_URL')}}images/loader.gif" alt="loading image"></center>
+                        </span>
+                      </div>
+                    </div>   
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+<!--
+                <p class="pull-left">
+                  Condivido il <a id="metodo" href="#" target="_blank">metodo</a> proposto da
+                  <a href="{{constant('AHREF_FOUNDATION_URL')}}" target="_blank">Fondazione &lt;ahref</a>
+                </p>
+ -->
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{t('discussion','Close')}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if App.session is not empty %}
+          <input value="{{ App.session.user.firstname}} {{App.session.user.lastname }}" id="author" type="hidden">
+          <input value="{{constant('PROFILE_URL')~proposal.author.slug}}" id="authorid" type="hidden">
+          <input value="{{constant('PROFILE_IMAGE_URL')~App.session.user.id}}/{{constant('PROFILE_IMAGE_SIZE')}}" id="authorImage" type="hidden"> 
+        {% endif %}
+        {% set count = count + 1 %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+<div id="formModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">{{t('discussion', 'Add a new Proposal ')}}</h3>
+      </div>
+      {% if App.session is not empty %} 
+        <div class="modal-body" style="padding:40px;">
+          <form class="form-horizontal" method="post" role="form" action="{{constant('BASE_URL')}}discussion/proposal/submit/{{ slug }}" id="submit-proposal-form">
+            {% set class = 'alert-danger' %}
+            {% if message.msg is not empty %}
+              {% if message.success is not empty %}
+                {% set class = 'alert-success' %} 
+              {% endif %} 
+            {% endif %}
+            <div class="form-group">
+              <div class="{{class}}  " id="proposal-error">
+                {% if message.msg is not empty %} 
+                  {{ message.msg }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="title">{{ t('discussion', 'Title') }}</label>
+              {% set title = '' %}
+              {% if proposal   is not empty %} 
+                {% if discussion.title is not empty %}
+                  {% set title = title %} 
+                {% endif %}
+              {% endif %}
+              <input maxlength="{{title_char}}" class="form-control" id="title" name="title" value="{{title}}" type="text" />
+              <div class="words">{{title_char}}</div>
+            </div>
+            <div class="form-group">
+              <label for="Introduction">{{ t('discussion', 'Introduction') }}</label>
+              {% set summary = '' %} 
+              {% if proposal is not empty %}
+                {% if proposal.summary is not empty %}
+                  {% set summary = proposal.summary %}
+                {% endif %} 
+              {% endif %}
+              <textarea rows="3" maxlength="{{intro_char}}" class="form-control"  id="proposalIntroduction" name="summary">{{summary}}</textarea>
+              <div class="words">{{intro_char}}</div>
+            </div>
+            <div class="form-group">
+              <label for="Proposal">{{ t('discussion', 'Proposal') }}</label>
+              <textarea rows="5" class="form-control" id="proposalBody" name="body">{{summary}}</textarea>
+            </div>
+            <div class="form-group">
+              {% if topics is not empty %}
+                <label for="Topics">{{ t('discussion', 'Topics') }}</label>
+                {% for topic in topics %}
+                  <label class="checkbox-inline">
+                    <input type="checkbox" class="topic" name="topics[]" value="{{topic}}"> {{topic}}
+                  </label>
+                {% endfor %}
+                <input name="hasTopics" value="1" type="hidden" />
+              {% else %}
+                <input name="hasTopics" value="0" type="hidden" />
+              {% endif %}
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ t('discussion', 'Cancel')}}</button>
+          <button id="saveProposal" class="btn btn-primary">{{ t('discussion', 'Save Proposal')}}</button>
+        </div>
+      {% else %}
+        <div class="modal-body"> 
+          <a href="http://www.civiclinks.it/it/a/register/?network={{constant('CIVICLINKS_NETWORK_TOKEN')}}">
+            <img src="{{constant('THEME_URL')}}images/pop-up.jpg" class="img-responsive" />
+          </a>
+        </div>
+      {%endif%}
+    </div>
+  </div>
+</div>
+<div class="modal hide" id="myModalx">
+  <div class="modal-body">
+    <a href="http://www.civiclinks.it/it/a/register/?network={{constant('CIVICLINKS_NETWORK_TOKEN')}}">
+      <img src="{{constant('THEME_URL')}}images/pop-up.jpg">
+    </a>
+  </div>
+</div>
+<div class="confirm-alert modal" id="confirm-alert">
+  <div class="modal-dialog" style="padding:0; width:auto;">
+    <div class="modal-content proposal-modal-content">
+      <div class="modal-body">
+        <div class="text">
+          <strong>Attenzione!</strong>
+          <br />Le proposte pubblicate non possono essere modificate o cancellate. sei
+          sicuro di voler pubblicare questa proposta o preferisci rivederla ?
+          <div class="action-buttons">
+            <button id="yes">Pubblica</button>
+            <button id="no">Rivedi la proposta</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var title = "{{constant('TITLE')}}";
+          var imageUrl = "{{constant('PROFILE_IMAGE_URL')}}";
+          var imageSize = "{{constant('PROFILE_IMAGE_SIZE')}}";
+          var triangles = {{under}} ;
+          var colors = {{colors}};
+          var tcharLimit = "{{title_char}}";
+          var icharLimit = "{{intro_char}}";
+          var ocharLimit = "{{max_char_opinion}}";
+</script>
+<script src="{{constant('THEME_URL')}}js/imagesloaded.pkgd.min.js"></script>
+<script src="{{constant('THEME_URL')}}js/masonry.pkgd.min.js"></script>

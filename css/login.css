@@ -1,0 +1,90 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #333;
+  margin: 20px;
+}
+
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 767px) {
+
+  body {
+    padding-top: 0px;
+    margin: 0px;
+  } 
+  #error{
+    color:#FFFFFF !important;
+    background: #4cbed7;
+  }
+
+  .user-nav-bar {           
+    padding: 0px !important;
+  }
+  .user-nav-bar:after{
+    display: none !important;
+  }
+  .user-nav-bar:before{
+    display: none !important;
+  }
+
+}
+
+#application {
+  max-width: 300px;
+
+}
+#application .container {
+  background-color: white;
+}
+
+.form-signin {
+  background-color: white;
+  padding: 20px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.form-signin-heading {
+  color: black;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  margin-bottom: 25px;
+}
+
+.btn {
+  text-shadow: none;
+  font-weight: normal;
+}
+
+.alert-error {
+  color: #00a4a7;;
+  background-color: white;
+  border: none;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+.form-signin input {
+  border-radius: 0px 0px 0px 0px;
+  border: 1px solid rgb(0,164,167);
+  margin-bottom: 15px;
+}
+
+#submit {
+  margin-top: 15px;
+}
+
+.civiclinks-logo-2 {
+  margin-top: 4px;
+  margin-bottom: 5px;
+}
+
+#pageslide {
+  width: auto;
+  padding: 0 20px 20px 20px;
+}

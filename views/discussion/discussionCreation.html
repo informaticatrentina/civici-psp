@@ -1,0 +1,87 @@
+<div class="container darkheader">
+  <div class="row">
+    <div class="span3"><a class="link" href="{{constant('BASE_URL')}}admin/discussion/list">{{ t('discussion', 'Manage Discussion') }}</a>
+    </div>
+  </div>
+</div>
+<div class="container maincontent">
+  <form class="form-create-discussion" action="{{constant('BASE_URL')}}admin/discussion/add" method="post"  enctype = "multipart/form-data">
+    <legend>{{ t('discussion', 'Create Discussion') }}</legend>
+    {% set class = 'alert-error' %}
+    {% if message.msg is not empty %}
+    {% if message.success is not empty %}
+    {% set class = 'alert-success' %}
+    {% endif %}      
+    {% endif %}
+    <div class="{{class}}" id="error">
+      {% if message.msg is not empty %}
+      {{ message.msg }}
+      {% endif %}  
+    </div>
+    <label>{{ t('discussion', 'Discussion Title') }}</label>
+    {% set discussionTitle = '' %}
+    {% if discussion is not empty %}
+    {% if discussion.discussionTitle is not empty %}
+    {% set discussionTitle = discussion.discussionTitle %}
+    {% endif %}
+    {% endif %}
+    <input type="text" id="discussionTitle" class="input-block-level input-xxlarge" name="discussionTitle"  value="{{discussionTitle}}">
+    <label>{{ t('discussion', 'Discussion Slug') }}</label>
+    {% set discussionSlug= '' %}
+    {% if discussion is not empty %}
+    {% if discussion.discussionSlug is not empty %}
+    {% set discussionSlug = discussion.discussionSlug %}
+    {% endif %}
+    {% endif %}
+    <input type="text" id="discussionSlug" class="input-block-level input-xxlarge" name="discussionSlug"  value="{{discussionSlug}}">
+    <label>{{ t('discussion','Discussion Summay')}}</label>
+    {% set discussionSummary = '' %}
+    {% if discussion is not empty %}
+    {% if discussion.discussionSummary is not empty %}
+    {% set discussionSummary = discussion.discussionSummary %}
+    {% endif %}
+    {% endif %}
+    <textarea  class="input-block-level textarea input-xxlarge" id="discussionSummary" name="discussionSummary">{{discussionSummary}}</textarea>
+    <label>{{ t('discussion', 'Additional Description (Header Text)') }}</label>
+    {% set additionalDescription = '' %}
+    {% if discussion is not empty %}
+      {% if discussion.additional_description is not empty %}
+        {% set additionalDescription = discussion.additional_description %}
+      {% endif %}
+    {% endif %}
+    <textarea  class="input-block-level textarea input-xxlarge"  name="additional_description">{{additionalDescription}}</textarea>
+    <label> {{ t('discussion','Discussion Topics (Please enter "," saperated )') }} </label>
+    {% set discussionTopics = '' %}
+    {% if discussion is not empty %}
+    {% if discussion.discussionTopics is not empty %}
+    {% set discussionTitle = discussion.discussionTitle %}
+    {% endif %}
+    {% endif %}
+    <input type="text" id="discussionTopics" class="input-block-level input-xxlarge" name="discussionTopics"  value="{{discussionTopics}}">
+    <label> {{ t('discussion','Status') }} </label>
+    <label class="radio">
+      <input type="radio" name="status" id="active" value="active" checked>
+      {{ t('discussion', 'Active' )}}
+    </label>
+    <label class="radio">
+      <input type="radio" name="status" id="inactive" value="incative" >
+      {{ t('discussion', 'InActive') }}
+    </label>
+    <label > {{ t('discussion','Propoasl Status') }}</label>
+    <label class="radio">
+      <input type="radio" name="proposal_status" id="open" value="open" checked>
+      {{ t('discussion', 'Open') }}
+    </label>    <label class="radio">
+      <input type="radio" name="proposal_status" id="closed" value="closed" >
+      {{ t('discussion', 'Closed' )}}
+    </label>
+
+    <button id="create" style="float: none" class="btn btn-large btn-primary" type="submit" name='discussionDetail'>{{ t('discussion', 'create discussion') }}</button>
+  </form>
+  <hr>
+</div>  
+<script>
+  var url = "{{constant('BASE_URL')}}";
+  var title = "{{constant('TITLE')}}";
+</script>
+<script src="{{constant('THEME_URL')}}js/createDiscussion.js"></script>

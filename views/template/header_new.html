@@ -1,0 +1,50 @@
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container" id="nav-main-menu" style="padding : 0px">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>     
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav hidden-lg hidden-md hidden-sm" id="nav-menu" style="margin:0;">
+        {% if App.session is not empty %}
+          <li><a href="{{constant('PROFILE_URL')~App.session.user.id}}">{{ t('discussion','Welcome') }}:&nbsp;{{App.session.user.firstname}}&nbsp;{{App.session.user.lastname}}</a></li>
+          <li><a href="{{constant('BASE_URL')}}logout">{{ t('discussion', 'Logout') }}</a></li>
+        {% else %}
+          <li class="register-link"><a href="#">{{t('discussion', 'Register')}}</a></li>
+          <li class="login-link"><a href="#">{{t('discussion', 'Login')}}</a></li>
+        {% endif %}
+      </ul>
+
+      <ul id="nav-login" class="nav pull-right navbar-nav visible-lg visible-md visible-sm">
+        <ul class="nav pull-right navbar-nav">
+        {% if App.session is not empty %}
+          <li><a href="{{constant('PROFILE_URL')~App.session.user.id}}">{{  App.session.user.firstname }} {{  App.session.user.lastname }}</a></li>
+          <li id="registration"><a class="btn btn-default btn-sm" href="{{ constant('BASE_URL')}}logout">{{ t('discussion','Logout') }}</a></li>
+        {% else %}
+          <li id="registration"><a class="btn btn-default register-link btn-sm" href="#">{{t('discussion', 'Register')}}</a></li>
+          <li><a class="login-link" href="#">{{t('discussion', 'Login')}}</a></li>
+        {% endif %}
+        </ul>
+      </ul>
+    </div>
+  </div>
+</div>
+{% set adminUser = false %}
+{% set adminUser = isAdminUser() %}
+{% if adminUser == true %}      
+  <ul class="nav nav-tabs">
+    <li><a href="{{constant('BASE_URL')}}">Home</a></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        Admin <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="{{constant('BASE_URL')}}admin/discussion/list">Discussion List</a></li>
+        <li><a href="{{constant('BASE_URL')}}admin/configuration">Configuration Panel</a></li>
+      </ul>
+    </li>
+  </ul>
+{%endif%}
